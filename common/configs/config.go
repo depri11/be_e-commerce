@@ -2,7 +2,6 @@ package configs
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -10,7 +9,7 @@ import (
 
 	"github.com/depri11/be_e-commerce/connections"
 	"github.com/go-redis/redis"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type ConfigurationDomain interface {
@@ -31,7 +30,7 @@ type Configuration struct {
 type postgreConfig struct {
 	Host     string
 	User     string
-	Port     int
+	Port     string
 	Database string
 	Password string
 	GormConn *gorm.DB
@@ -65,14 +64,9 @@ func (c *Configuration) Read() (res *Configuration, err error) {
 		return nil, err
 	}
 	c.PostgreConfig.User = postgreUser
-	postgrePortStr := os.Getenv("POSTGRE_PORT")
-	if postgrePortStr == "" {
+	postgrePort := os.Getenv("POSTGRE_PORT")
+	if postgrePort == "" {
 		err = errors.New("invalid-postgre-port")
-		log.Println(err)
-		return nil, err
-	}
-	postgrePort, err := strconv.Atoi(postgrePortStr)
-	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
@@ -98,7 +92,7 @@ func (c *Configuration) Read() (res *Configuration, err error) {
 		return nil, err
 	}
 
-	gormConn, err := connections.GormConnect(c.PostgreConfig.Host, fmt.Sprintf(`%d`, c.PostgreConfig.Port), c.PostgreConfig.User, c.PostgreConfig.Password, c.PostgreConfig.Database, c.AppEnv)
+	gormConn, err := connections.GormConnect(c.PostgreConfig.Host, c.PostgreConfig.User, c.PostgreConfig.Password, c.PostgreConfig.Database, c.PostgreConfig.Port, c.AppEnv)
 	if err != nil {
 		log.Println(err)
 		return nil, err
