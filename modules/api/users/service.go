@@ -1,19 +1,19 @@
-package usecases
+package users
 
 import (
 	"github.com/depri11/be_e-commerce/domains"
 	"github.com/depri11/be_e-commerce/helpers"
 )
 
-type usecases struct {
+type service struct {
 	repositories domains.UserRepository
 }
 
-func NewUsecases(repositories domains.UserRepository) *usecases {
-	return &usecases{repositories}
+func NewService(repositories domains.UserRepository) *service {
+	return &service{repositories}
 }
 
-func (u *usecases) GetAll() (*helpers.Response, error) {
+func (u *service) GetAll() (*helpers.Response, error) {
 	result, err := u.repositories.GetAll()
 	if err != nil {
 		return nil, err

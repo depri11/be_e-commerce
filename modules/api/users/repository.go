@@ -1,4 +1,4 @@
-package repositories
+package users
 
 import (
 	"github.com/depri11/be_e-commerce/models"
