@@ -28,6 +28,7 @@ func Setup(config *configs.Configuration) *iris.Application {
 	productService := products.NewService(productRepo)
 	productHandler := products.NewHandler(productService)
 	noAuth.Get("/products", productHandler.GetAll)
+	noAuth.Get("/product", productHandler.GetByID)
 
 	return app
 }

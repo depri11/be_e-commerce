@@ -6,9 +6,11 @@ import (
 )
 
 type ProductRepository interface {
-	GetAll() (*models.Products, error)
+	GetAll(params map[string]interface{}) (products *models.Products, err error)
+	GetByID(id int) (product *models.Product, err error)
 }
 
 type ProductService interface {
-	GetAll() (*helpers.Response, int, error)
+	GetAll(params map[string]interface{}) (*helpers.Response, error)
+	GetById(id int) (*helpers.Response, error)
 }

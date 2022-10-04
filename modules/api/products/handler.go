@@ -18,12 +18,36 @@ func NewHandler(service domains.ProductService) *handler {
 }
 
 func (h *handler) GetAll(ctx iris.Context) {
-	products, code, err := h.service.GetAll()
+	order := ctx.URLParam("order_by")
+	sort := ctx.URLParam("sort_by")
+	params := map[string]interface{}{
+		"order_by": order,
+		"sort_by":  sort,
+	}
+
+	res, err := h.service.GetAll(params)
 	if err != nil {
-		ctx.StatusCode(code)
 		log.Println(err)
-		ctx.JSON(products)
+		res.ResponseJSON(ctx)
 		return
 	}
-	ctx.JSON(products)
+	res.ResponseJSON(ctx)
+}
+
+func (h *handler) GetByID(ctx iris.Context) {
+	id, err := ctx.URLParamInt("id")
+	if err != nil {
+		log.Println(err)
+		ctx.StopWithError(500, err)
+		return
+	}
+
+	res, err := h.service.GetById(id)
+	if err != nil {
+		log.Println(err)
+		res.ResponseJSON(ctx)
+		return
+	}
+
+	res.ResponseJSON(ctx)
 }
