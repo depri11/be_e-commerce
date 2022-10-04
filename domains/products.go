@@ -5,10 +5,10 @@ import (
 	"github.com/depri11/be_e-commerce/models"
 )
 
-type UserRepository interface {
-	GetAll() (*models.Users, error)
+type ProductRepository interface {
+	GetAll() (*models.Products, error)
 }
 
-type UserUsecases interface {
+type ProductService interface {
 	GetAll() (*helpers.Response, int, error)
 }

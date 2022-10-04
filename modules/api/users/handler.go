@@ -1,6 +1,8 @@
 package users
 
 import (
+	"log"
+
 	"github.com/depri11/be_e-commerce/domains"
 	"github.com/kataras/iris/v12"
 )
@@ -16,10 +18,11 @@ func NewHandler(usecases domains.UserUsecases) *handler {
 }
 
 func (d *handler) GetAll(ctx iris.Context) {
-	res, err := d.usecases.GetAll()
+	res, code, err := d.usecases.GetAll()
 	if err != nil {
-		ctx.StatusCode(iris.StatusInternalServerError)
-		ctx.WriteString(err.Error())
+		ctx.StatusCode(code)
+		log.Println(err)
+		ctx.JSON(res)
 		return
 	}
 	ctx.JSON(res)

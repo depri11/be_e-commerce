@@ -8,7 +8,8 @@ type Product struct {
 	Description  string            `json:"description"`
 	Price        float64           `json:"price"`
 	Tags         int               `json:"tags"`
-	CategoriesID ProductCategories `json:"categories_id"`
+	CategoriesID int               `json:"categories_id"`
+	Categories   ProductCategories `json:"categories"`
 }
 
 type Products []Product
