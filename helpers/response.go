@@ -1,4 +1,4 @@
-package domains
+package helpers
 
 type Response struct {
 	Status  int         `json:"status" default:"200"`

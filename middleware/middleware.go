@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/depri11/be_e-commerce/domains"
+	"github.com/depri11/be_e-commerce/helpers"
 	"github.com/depri11/be_e-commerce/models"
 	"github.com/go-redis/redis"
 	"github.com/golang-jwt/jwt/v4"
@@ -86,7 +86,7 @@ func (m *middleware) Customize() iris.Handler {
 			return
 		}
 
-		user := models.Users{}
+		user := models.User{}
 		if claims["type"] == nil {
 			if err := json.Unmarshal([]byte(userJson), &user); err != nil {
 				log.Println(err)
@@ -105,5 +105,5 @@ func (m *middleware) Customize() iris.Handler {
 
 func (m *middleware) response(ctx iris.Context, status int, message string, data interface{}) {
 	// ctx.StatusCode(status)
-	ctx.JSON(domains.Response{Status: status, Message: message, Data: data})
+	ctx.JSON(helpers.Response{Status: status, Message: message, Data: data})
 }
