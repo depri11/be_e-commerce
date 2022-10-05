@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/depri11/be_e-commerce/common/configs"
 	"github.com/depri11/be_e-commerce/middleware"
+	"github.com/depri11/be_e-commerce/modules/api/categories"
 	"github.com/depri11/be_e-commerce/modules/api/products"
 	"github.com/depri11/be_e-commerce/modules/api/users"
 	"github.com/kataras/iris/v12"
@@ -29,6 +30,12 @@ func Setup(config *configs.Configuration) *iris.Application {
 	productHandler := products.NewHandler(productService)
 	noAuth.Get("/products", productHandler.GetAll)
 	noAuth.Get("/product", productHandler.GetByID)
+
+	categoryRepo := categories.NewRepository(config.PostgreConfig.GormConn)
+	categoryService := categories.NewService(categoryRepo)
+	categoryHandler := categories.NewHandler(categoryService)
+	noAuth.Get("/categories", categoryHandler.GetAll)
+	noAuth.Get("/categorie", categoryHandler.GetById)
 
 	return app
 }

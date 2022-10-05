@@ -2,6 +2,7 @@ package products
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/depri11/be_e-commerce/models"
 	"gorm.io/gorm"
@@ -17,12 +18,13 @@ func NewRepository(db *gorm.DB) *repository {
 
 func (r *repository) GetAll(params map[string]interface{}) (products *models.Products, err error) {
 	query := r.db
-	if params["order_by"] != nil && params["sort_by"] != nil {
+	if params["order_by"] != "" && params["sort_by"] != "" {
 		query = query.Order(fmt.Sprintf("%s %s", params["order_by"], params["sort_by"]))
 	}
 
 	err = query.Preload("Galleries").Find(&products).Error
 	if err != nil {
+		log.Println(err)
 		return nil, err
 	}
 

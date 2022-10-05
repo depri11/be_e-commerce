@@ -27,7 +27,6 @@ func (h *handler) GetAll(ctx iris.Context) {
 
 	res, err := h.service.GetAll(params)
 	if err != nil {
-		log.Println(err)
 		res.ResponseJSON(ctx)
 		return
 	}
