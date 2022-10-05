@@ -23,7 +23,10 @@ func Setup(config *configs.Configuration) *iris.Application {
 	userRepo := users.NewRepository(config.PostgreConfig.GormConn)
 	userService := users.NewService(userRepo)
 	userHandler := users.NewHandler(userService)
+	noAuth.Post("/register", userHandler.Register)
 	noAuth.Get("/users", userHandler.GetAll)
+	noAuth.Get("/me", userHandler.MyProfile)
+	noAuth.Put("/me/update", userHandler.EditProfile)
 
 	productRepo := products.NewRepository(config.PostgreConfig.GormConn)
 	productService := products.NewService(productRepo)

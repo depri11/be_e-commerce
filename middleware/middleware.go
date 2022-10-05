@@ -98,7 +98,7 @@ func (m *middleware) Customize() iris.Handler {
 		ctx.Values().Set("User", user)
 		ctx.Values().Set("user_id", user.ID)
 		ctx.Values().Set("user_role", user.Roles)
-		ctx.Values().Set("user_username", user.Username)
+		ctx.Values().Set("user_email", user.Email)
 		ctx.Values().Set("session_id", sessionID)
 	}
 }
