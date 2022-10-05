@@ -1,5 +1,10 @@
 package input
 
+type UserLoginInput struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 type UserRegisterInput struct {
 	Fullname string `json:"fullname"`
 	Username string `json:"username"`

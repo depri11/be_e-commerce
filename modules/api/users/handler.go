@@ -38,6 +38,24 @@ func (h *handler) MyProfile(ctx iris.Context) {
 	resp.ResponseJSON(ctx)
 }
 
+func (h *handler) Login(ctx iris.Context) {
+	var payload input.UserLoginInput
+	err := ctx.ReadJSON(&payload)
+	if err != nil {
+		log.Println(err)
+		ctx.StopWithError(iris.StatusBadRequest, err)
+		return
+	}
+
+	resp, err := h.service.Login(&payload)
+	if err != nil {
+		resp.ResponseJSON(ctx)
+		return
+	}
+
+	resp.ResponseJSON(ctx)
+}
+
 func (h *handler) Register(ctx iris.Context) {
 	var payload input.UserRegisterInput
 	err := ctx.ReadJSON(&payload)

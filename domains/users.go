@@ -16,6 +16,7 @@ type UserRepository interface {
 type UserService interface {
 	GetAll() (*helpers.Response, error)
 	GetByEmail(email string) (*helpers.Response, error)
+	Login(payload *input.UserLoginInput) (*helpers.Response, error)
 	Register(payload *input.UserRegisterInput) (*helpers.Response, error)
 	Update(email string, payload *input.UserEditProfileInput) (*helpers.Response, error)
 }

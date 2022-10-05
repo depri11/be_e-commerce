@@ -38,6 +38,29 @@ func (u *service) GetByEmail(email string) (*helpers.Response, error) {
 	return &helpers.Response{Status: 200, Message: "Success", Data: result}, err
 }
 
+func (u *service) Login(payload *input.UserLoginInput) (*helpers.Response, error) {
+	user, err := u.repository.GetByEmail(payload.Email)
+	if err != nil {
+		return &helpers.Response{Status: 400, Message: "Failed", Data: "Your email or password incorrect!"}, err
+	}
+
+	if !helpers.ComparePassword(payload.Password, user.Password) {
+		return &helpers.Response{Status: 400, Message: "Failed", Data: "Your email or password incorrect!"}, err
+	}
+
+	new := helpers.NewToken(uint(user.ID), user.Username, user.Roles)
+	token, err := new.GenerateJWT()
+	if err != nil {
+		return &helpers.Response{Status: 400, Message: "Failed", Data: err.Error()}, err
+	}
+	result := map[string]interface{}{
+		"token":        token,
+		"refreshToken": "",
+	}
+
+	return &helpers.Response{Status: 200, Message: "Success", Data: result}, nil
+}
+
 func (u *service) Register(payload *input.UserRegisterInput) (*helpers.Response, error) {
 	var user models.User
 	user.Fullname = payload.Fullname
