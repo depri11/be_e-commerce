@@ -1,7 +1,9 @@
 package users
 
 import (
+	"context"
 	"log"
+	"time"
 
 	"github.com/depri11/be_e-commerce/domains"
 	"github.com/depri11/be_e-commerce/helpers"
@@ -11,14 +13,15 @@ import (
 
 type service struct {
 	repository domains.UserRepository
+	ctxTimeout time.Duration
 }
 
-func NewService(repository domains.UserRepository) *service {
-	return &service{repository}
+func NewService(repository domains.UserRepository, ctx time.Duration) *service {
+	return &service{repository, ctx}
 }
 
-func (u *service) GetAll() (*helpers.Response, error) {
-	result, err := u.repository.GetAll()
+func (u *service) GetAll(ctx context.Context) (*helpers.Response, error) {
+	result, err := u.repository.GetAll(ctx)
 	if err != nil {
 		if err.Error() == "record not found" {
 			return &helpers.Response{Status: 404, Message: "Failed", Data: err.Error()}, err
@@ -29,8 +32,8 @@ func (u *service) GetAll() (*helpers.Response, error) {
 	return &helpers.Response{Status: 200, Message: "Success", Data: result}, nil
 }
 
-func (u *service) GetByEmail(email string) (*helpers.Response, error) {
-	result, err := u.repository.GetByEmail(email)
+func (u *service) GetByEmail(ctx context.Context, email string) (*helpers.Response, error) {
+	result, err := u.repository.GetByEmail(ctx, email)
 	if err != nil {
 		return &helpers.Response{Status: 400, Message: "Failed", Data: err.Error()}, err
 	}
@@ -38,8 +41,11 @@ func (u *service) GetByEmail(email string) (*helpers.Response, error) {
 	return &helpers.Response{Status: 200, Message: "Success", Data: result}, err
 }
 
-func (u *service) Login(payload *input.UserLoginInput) (*helpers.Response, error) {
-	user, err := u.repository.GetByEmail(payload.Email)
+func (u *service) Login(ctx context.Context, payload *input.UserLoginInput) (*helpers.Response, error) {
+	ctx, cancel := context.WithTimeout(ctx, u.ctxTimeout)
+	defer cancel()
+
+	user, err := u.repository.GetByEmail(ctx, payload.Email)
 	if err != nil {
 		return &helpers.Response{Status: 400, Message: "Failed", Data: "Your email or password incorrect!"}, err
 	}
@@ -61,7 +67,7 @@ func (u *service) Login(payload *input.UserLoginInput) (*helpers.Response, error
 	return &helpers.Response{Status: 200, Message: "Success", Data: result}, nil
 }
 
-func (u *service) Register(payload *input.UserRegisterInput) (*helpers.Response, error) {
+func (u *service) Register(ctx context.Context, payload *input.UserRegisterInput) (*helpers.Response, error) {
 	var user models.User
 	user.Fullname = payload.Fullname
 	user.Username = payload.Username
@@ -75,7 +81,7 @@ func (u *service) Register(payload *input.UserRegisterInput) (*helpers.Response,
 	user.Roles = 0
 	user.Verify = false
 
-	result, err := u.repository.Register(&user)
+	result, err := u.repository.Register(ctx, &user)
 	if err != nil {
 		return &helpers.Response{Status: 400, Message: "Failed", Data: err.Error()}, err
 	}
@@ -83,8 +89,8 @@ func (u *service) Register(payload *input.UserRegisterInput) (*helpers.Response,
 	return &helpers.Response{Status: 200, Message: "Success", Data: result}, nil
 }
 
-func (u *service) Update(email string, payload *input.UserEditProfileInput) (*helpers.Response, error) {
-	user, err := u.repository.GetByEmail(email)
+func (u *service) Update(ctx context.Context, email string, payload *input.UserEditProfileInput) (*helpers.Response, error) {
+	user, err := u.repository.GetByEmail(ctx, email)
 	if err != nil {
 		return &helpers.Response{Status: 400, Message: "Failed", Data: err.Error()}, err
 	}
@@ -100,7 +106,7 @@ func (u *service) Update(email string, payload *input.UserEditProfileInput) (*he
 		}
 		user.Password = hash
 	}
-	result, err := u.repository.Update(email, user)
+	result, err := u.repository.Update(ctx, email, user)
 	if err != nil {
 		return &helpers.Response{Status: 400, Message: "Failed", Data: err.Error()}, err
 	}

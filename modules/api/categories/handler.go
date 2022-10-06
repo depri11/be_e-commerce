@@ -23,7 +23,7 @@ func (h *handler) GetAll(ctx iris.Context) {
 		"name": name,
 	}
 
-	resp, err := h.service.GetAll(params)
+	resp, err := h.service.GetAll(ctx.Request().Context(), params)
 	if err != nil {
 		resp.ResponseJSON(ctx)
 		return
@@ -40,7 +40,7 @@ func (h *handler) GetById(ctx iris.Context) {
 		return
 	}
 
-	resp, err := h.service.GetById(id)
+	resp, err := h.service.GetById(ctx.Request().Context(), id)
 	if err != nil {
 		resp.ResponseJSON(ctx)
 		return

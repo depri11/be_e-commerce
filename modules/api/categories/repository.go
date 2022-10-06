@@ -1,6 +1,7 @@
 package categories
 
 import (
+	"context"
 	"log"
 
 	"github.com/depri11/be_e-commerce/models"
@@ -17,7 +18,7 @@ func NewRepository(db *gorm.DB) *repository {
 	}
 }
 
-func (r *repository) GetAll(params map[string]interface{}) (category *models.ProductCategories, err error) {
+func (r *repository) GetAll(ctx context.Context, params map[string]interface{}) (category *models.ProductCategories, err error) {
 	query := r.db
 	if params["name"] != nil {
 		query = query.Where("lower(name) like ?", "%"+params["name"].(string)+"%")
@@ -32,7 +33,7 @@ func (r *repository) GetAll(params map[string]interface{}) (category *models.Pro
 	return category, nil
 }
 
-func (r *repository) GetById(id int) (category *models.ProductCategorie, err error) {
+func (r *repository) GetById(ctx context.Context, id int) (category *models.ProductCategorie, err error) {
 	err = r.db.Where("id = ?", id).Find(&category).Error
 	if err != nil {
 		log.Println(err)

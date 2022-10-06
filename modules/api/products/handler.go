@@ -25,7 +25,7 @@ func (h *handler) GetAll(ctx iris.Context) {
 		"sort_by":  sort,
 	}
 
-	res, err := h.service.GetAll(params)
+	res, err := h.service.GetAll(ctx.Request().Context(), params)
 	if err != nil {
 		res.ResponseJSON(ctx)
 		return
@@ -41,7 +41,7 @@ func (h *handler) GetByID(ctx iris.Context) {
 		return
 	}
 
-	res, err := h.service.GetById(id)
+	res, err := h.service.GetById(ctx.Request().Context(), id)
 	if err != nil {
 		log.Println(err)
 		res.ResponseJSON(ctx)

@@ -21,7 +21,7 @@ func Setup(config *configs.Configuration) *iris.Application {
 	auth.Use(m.Customize())
 
 	userRepo := users.NewRepository(config.PostgreConfig.GormConn)
-	userService := users.NewService(userRepo)
+	userService := users.NewService(userRepo, config.TimeoutCtx)
 	userHandler := users.NewHandler(userService)
 	noAuth.Post("/register", userHandler.Register)
 	noAuth.Post("/login", userHandler.Login)
@@ -30,13 +30,13 @@ func Setup(config *configs.Configuration) *iris.Application {
 	noAuth.Put("/me/update", userHandler.EditProfile)
 
 	productRepo := products.NewRepository(config.PostgreConfig.GormConn)
-	productService := products.NewService(productRepo)
+	productService := products.NewService(productRepo, config.TimeoutCtx)
 	productHandler := products.NewHandler(productService)
 	noAuth.Get("/products", productHandler.GetAll)
 	noAuth.Get("/product", productHandler.GetByID)
 
 	categoryRepo := categories.NewRepository(config.PostgreConfig.GormConn)
-	categoryService := categories.NewService(categoryRepo)
+	categoryService := categories.NewService(categoryRepo, config.TimeoutCtx)
 	categoryHandler := categories.NewHandler(categoryService)
 	noAuth.Get("/categories", categoryHandler.GetAll)
 	noAuth.Get("/categorie", categoryHandler.GetById)

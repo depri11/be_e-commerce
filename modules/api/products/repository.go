@@ -1,6 +1,7 @@
 package products
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -16,7 +17,7 @@ func NewRepository(db *gorm.DB) *repository {
 	return &repository{db}
 }
 
-func (r *repository) GetAll(params map[string]interface{}) (products *models.Products, err error) {
+func (r *repository) GetAll(ctx context.Context, params map[string]interface{}) (products *models.Products, err error) {
 	query := r.db
 	if params["order_by"] != "" && params["sort_by"] != "" {
 		query = query.Order(fmt.Sprintf("%s %s", params["order_by"], params["sort_by"]))
@@ -31,7 +32,7 @@ func (r *repository) GetAll(params map[string]interface{}) (products *models.Pro
 	return products, nil
 }
 
-func (r *repository) GetByID(id int) (product *models.Product, err error) {
+func (r *repository) GetByID(ctx context.Context, id int) (product *models.Product, err error) {
 	err = r.db.Where("id = ?", id).Find(&product).Error
 	if err != nil {
 		return nil, err

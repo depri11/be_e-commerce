@@ -17,7 +17,7 @@ func NewHandler(service domains.UserService) *handler {
 }
 
 func (h *handler) GetAll(ctx iris.Context) {
-	resp, err := h.service.GetAll()
+	resp, err := h.service.GetAll(ctx.Request().Context())
 	if err != nil {
 		log.Println(err)
 		resp.ResponseJSON(ctx)
@@ -29,7 +29,7 @@ func (h *handler) GetAll(ctx iris.Context) {
 func (h *handler) MyProfile(ctx iris.Context) {
 	email := ctx.Values().GetString("user_email")
 	log.Println(email)
-	resp, err := h.service.GetByEmail(email)
+	resp, err := h.service.GetByEmail(ctx.Request().Context(), email)
 	if err != nil {
 		resp.ResponseJSON(ctx)
 		return
@@ -47,7 +47,7 @@ func (h *handler) Login(ctx iris.Context) {
 		return
 	}
 
-	resp, err := h.service.Login(&payload)
+	resp, err := h.service.Login(ctx.Request().Context(), &payload)
 	if err != nil {
 		resp.ResponseJSON(ctx)
 		return
@@ -65,7 +65,7 @@ func (h *handler) Register(ctx iris.Context) {
 		return
 	}
 
-	resp, err := h.service.Register(&payload)
+	resp, err := h.service.Register(ctx.Request().Context(), &payload)
 	if err != nil {
 		resp.ResponseJSON(ctx)
 		return
@@ -87,7 +87,7 @@ func (h *handler) EditProfile(ctx iris.Context) {
 		return
 	}
 
-	resp, err := h.service.Update(email, &payload)
+	resp, err := h.service.Update(ctx.Request().Context(), email, &payload)
 	if err != nil {
 		resp.ResponseJSON(ctx)
 		return

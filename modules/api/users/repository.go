@@ -1,6 +1,7 @@
 package users
 
 import (
+	"context"
 	"log"
 
 	"github.com/depri11/be_e-commerce/models"
@@ -15,7 +16,7 @@ func NewRepository(db *gorm.DB) *repository {
 	return &repository{db}
 }
 
-func (r *repository) GetAll() (*models.Users, error) {
+func (r *repository) GetAll(ctx context.Context) (*models.Users, error) {
 	var users models.Users
 	err := r.db.Order("id desc").Find(&users).Error
 	if err != nil {
@@ -26,7 +27,7 @@ func (r *repository) GetAll() (*models.Users, error) {
 	return &users, nil
 }
 
-func (r *repository) GetByEmail(email string) (user *models.User, err error) {
+func (r *repository) GetByEmail(ctx context.Context, email string) (user *models.User, err error) {
 	err = r.db.Where("email = ?", email).First(&user).Error
 	if err != nil {
 		log.Println(err)
@@ -36,7 +37,7 @@ func (r *repository) GetByEmail(email string) (user *models.User, err error) {
 	return user, nil
 }
 
-func (r *repository) Register(user *models.User) (*models.User, error) {
+func (r *repository) Register(ctx context.Context, user *models.User) (*models.User, error) {
 	err := r.db.Create(&user).Error
 	if err != nil {
 		log.Println(err)
@@ -46,7 +47,7 @@ func (r *repository) Register(user *models.User) (*models.User, error) {
 	return user, nil
 }
 
-func (r *repository) Update(email string, user *models.User) (*models.User, error) {
+func (r *repository) Update(ctx context.Context, email string, user *models.User) (*models.User, error) {
 	err := r.db.Save(&user).Where("email = ?", email).Error
 	if err != nil {
 		log.Println(err)
