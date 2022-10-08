@@ -8,7 +8,7 @@ import (
 )
 
 type ProductRepository interface {
-	GetAll(ctx context.Context, params map[string]interface{}) (products *models.Products, err error)
+	GetAll(ctx context.Context, params map[string]interface{}) (products []*models.Product, err error)
 	GetByID(ctx context.Context, id int) (product *models.Product, err error)
 }
 

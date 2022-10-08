@@ -9,7 +9,7 @@ import (
 )
 
 type UserRepository interface {
-	GetAll(ctx context.Context) (*models.Users, error)
+	GetAll(ctx context.Context) (users *[]models.User, err error)
 	GetByEmail(ctx context.Context, email string) (user *models.User, err error)
 	Register(ctx context.Context, user *models.User) (*models.User, error)
 	Update(ctx context.Context, email string, user *models.User) (*models.User, error)

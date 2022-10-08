@@ -86,7 +86,19 @@ func (u *service) Register(ctx context.Context, payload *input.UserRegisterInput
 		return &helpers.Response{Status: 400, Message: "Failed", Data: err.Error()}, err
 	}
 
-	return &helpers.Response{Status: 200, Message: "Success", Data: result}, nil
+	claims := helpers.NewToken(uint(result.ID), result.Username, result.Roles)
+	token, err := claims.GenerateJWT()
+	if err != nil {
+		log.Println(err)
+		return &helpers.Response{Status: 400, Message: "Failed", Data: err}, nil
+	}
+
+	other := map[string]interface{}{
+		"token":        token,
+		"refreshToken": "",
+	}
+
+	return &helpers.Response{Status: 200, Message: "Success", Data: result, Other: other}, nil
 }
 
 func (u *service) Update(ctx context.Context, email string, payload *input.UserEditProfileInput) (*helpers.Response, error) {

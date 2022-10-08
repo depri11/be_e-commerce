@@ -17,7 +17,7 @@ func NewRepository(db *gorm.DB) *repository {
 	return &repository{db}
 }
 
-func (r *repository) GetAll(ctx context.Context, params map[string]interface{}) (products *models.Products, err error) {
+func (r *repository) GetAll(ctx context.Context, params map[string]interface{}) (products []*models.Product, err error) {
 	query := r.db
 	if params["order_by"] != "" && params["sort_by"] != "" {
 		query = query.Order(fmt.Sprintf("%s %s", params["order_by"], params["sort_by"]))

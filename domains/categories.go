@@ -8,7 +8,7 @@ import (
 )
 
 type CategoryRepository interface {
-	GetAll(ctx context.Context, params map[string]interface{}) (category *models.ProductCategories, err error)
+	GetAll(ctx context.Context, params map[string]interface{}) (category []*models.ProductCategorie, err error)
 	GetById(ctx context.Context, id int) (category *models.ProductCategorie, err error)
 }
 

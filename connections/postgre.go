@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/depri11/be_e-commerce/models"
 	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -36,6 +37,8 @@ func GormConnect(host, user, pass, dbname, port, appEnv string) (dbConn *gorm.DB
 		log.Println(err)
 		return dbConn, err
 	}
+
+	dbConn.AutoMigrate(&models.Product{}, &models.ProductCategorie{}, &models.ProductGallerie{}, &models.User{}, &models.Transaction{}, &models.TransactionItems{})
 
 	if appEnv != "prod" {
 		dbConn = dbConn.Debug()

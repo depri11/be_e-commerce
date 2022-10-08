@@ -18,7 +18,7 @@ func NewRepository(db *gorm.DB) *repository {
 	}
 }
 
-func (r *repository) GetAll(ctx context.Context, params map[string]interface{}) (category *models.ProductCategories, err error) {
+func (r *repository) GetAll(ctx context.Context, params map[string]interface{}) (category []*models.ProductCategorie, err error) {
 	query := r.db
 	if params["name"] != nil {
 		query = query.Where("lower(name) like ?", "%"+params["name"].(string)+"%")

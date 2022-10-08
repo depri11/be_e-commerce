@@ -1,10 +1,13 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Transaction struct {
 	ID            uint64    `json:"id"`
-	UserID        User      `json:"user_id"`
+	UserID        uint      `json:"user_id"`
+	User          User      `json:"user"`
 	Address       string    `json:"address"`
 	Payment       string    `json:"payment"`
 	TotalPrice    float64   `json:"total_price"`
@@ -17,9 +20,12 @@ type Transaction struct {
 
 type TransactionItems struct {
 	ID            string      `json:"id"`
-	UserID        User        `json:"user_id"`
-	ProductID     Product     `json:"product_id"`
-	TransactionID Transaction `json:"transaction_id"`
+	UserID        uint        `json:"user_id"`
+	User          User        `json:"user"`
+	ProductID     uint        `json:"product_id"`
+	Product       Product     `json:"product"`
+	TransactionID string      `json:"transaction_id"`
+	Transaction   Transaction `json:"transaction"`
 	Quantity      int32       `json:"quantity"`
 	CreatedAt     time.Time   `json:"created_at"`
 	UpdatedAt     time.Time   `json:"updated_at"`

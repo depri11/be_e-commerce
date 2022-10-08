@@ -2,20 +2,21 @@ package models
 
 import (
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Product struct {
-	ID          uint64           `json:"id" gorm:"primary_key"`
-	Name        string           `json:"name"`
-	Description string           `json:"description"`
-	Price       float64          `json:"price"`
-	Tags        string           `json:"tags"`
-	CategorieID int64            `json:"categorie_id"`
-	Categorie   ProductCategorie `json:"categorie" gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	Galleries   ProductGalleries `json:"galleries"`
+	gorm.Model
+	ID          uint64            `json:"id" gorm:"primary_key"`
+	Name        string            `json:"name"`
+	Description string            `json:"description"`
+	Price       float64           `json:"price"`
+	Tags        string            `json:"tags"`
+	CategorieID int64             `json:"categorie_id"`
+	Categorie   ProductCategorie  `json:"categorie" gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Galleries   []ProductGallerie `json:"galleries"`
 }
-
-type Products []Product
 
 type ProductCategorie struct {
 	ID        uint64     `json:"id" gorm:"primary_key"`
@@ -24,9 +25,6 @@ type ProductCategorie struct {
 	UpdatedAt time.Time  `json:"updated_at"`
 	DeletedAt *time.Time `json:"deleted_at"`
 }
-
-type ProductCategories []ProductCategorie
-
 type ProductGallerie struct {
 	ID        uint64     `json:"id"`
 	ProductID int        `json:"product_id"`
@@ -35,5 +33,3 @@ type ProductGallerie struct {
 	UpdatedAt time.Time  `json:"updated_at"`
 	DeletedAt *time.Time `json:"deleted_at"`
 }
-
-type ProductGalleries []ProductGallerie

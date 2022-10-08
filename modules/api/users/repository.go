@@ -16,15 +16,14 @@ func NewRepository(db *gorm.DB) *repository {
 	return &repository{db}
 }
 
-func (r *repository) GetAll(ctx context.Context) (*models.Users, error) {
-	var users models.Users
-	err := r.db.Order("id desc").Find(&users).Error
+func (r *repository) GetAll(ctx context.Context) (users *[]models.User, err error) {
+	err = r.db.Order("id desc").Find(&users).Error
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 
-	return &users, nil
+	return users, nil
 }
 
 func (r *repository) GetByEmail(ctx context.Context, email string) (user *models.User, err error) {
