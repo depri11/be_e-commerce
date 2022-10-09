@@ -64,7 +64,7 @@ func (u *service) Login(ctx context.Context, payload *input.UserLoginInput) (*he
 		"refreshToken": "",
 	}
 
-	return &helpers.Response{Status: 200, Message: "Success", Data: result}, nil
+	return &helpers.Response{Status: 200, Message: "Success", Data: user, Other: result}, nil
 }
 
 func (u *service) Register(ctx context.Context, payload *input.UserRegisterInput) (*helpers.Response, error) {
